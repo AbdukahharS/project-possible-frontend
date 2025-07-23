@@ -1,4 +1,5 @@
-import { Outlet, Navigate } from 'react-router-dom'
+// import { Outlet, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/sidebar'
 import { AppSidebar } from './app-sidebar'
 import { Separator } from '@radix-ui/react-separator'
