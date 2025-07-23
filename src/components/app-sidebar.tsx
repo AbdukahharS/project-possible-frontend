@@ -1,19 +1,16 @@
 import * as React from 'react'
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
+  Users,
+  Earth,
   Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
-  SquareTerminal,
+  LayoutDashboard,
+  Layers2,
+  FileText
 } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
-import { NavProjects } from '@/components/nav-projects'
 import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher } from '@/components/team-switcher'
 import {
@@ -32,108 +29,51 @@ const data = {
     email: 'm@example.com',
     avatar: '/avatars/shadcn.jpg',
   },
-  teams: [
-    {
-      name: 'Chorvoq Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Chorvoq Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
-    },
-    {
-      name: 'Evil Corp.',
-      logo: Command,
-      plan: 'Free',
-    },
-  ],
+  team: {
+    name: 'Chorvoq',
+    logo: Earth,
+    plan: 'Geoportali',
+  },
   navMain: [
     {
-      title: 'Playground',
-      url: '#',
-      icon: SquareTerminal,
+      title: 'Boshqaruv paneli',
+      url: '/',
+      icon: LayoutDashboard,
       isActive: true,
+    },
+    {
+      title: 'Inson resurslari',
+      url: '/hr',
+      icon: Users,
       items: [
         {
-          title: 'History',
+          title: "Bo'limlar",
           url: '#',
         },
         {
-          title: 'Starred',
+          title: 'Rollar',
           url: '#',
         },
         {
-          title: 'Settings',
+          title: 'Foydalanuvchilar',
           url: '#',
         },
       ],
     },
     {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
+      title: 'Xarita',
+      url: '/map',
+      icon: Map,
     },
     {
-      title: 'Documentation',
+      title: 'Qatlamlar',
       url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
+      icon: Layers2,
     },
     {
-      title: 'Settings',
+      title: 'Yo\'riqnoma',
       url: '#',
-      icon: Settings2,
-      items: [
-        {
-          title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
-        },
-      ],
+      icon: FileText,
     },
   ],
   projects: [
@@ -160,11 +100,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props} className='bg-background'>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher team={data.team} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser

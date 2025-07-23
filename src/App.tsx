@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner"
 import ProtectedLayout from '@/components/protected-layout'
 // import { ConfirmModalProvider } from './components/Modals/ConfirmModalProvider'
 // Pages
-// import Home from './pages/Home'
+import Dashboard from './pages/dashboard'
 import Login from './pages/login'
 import { ThemeProvider } from './components/theme-provider'
 // import Statistics from './pages/Statistics/Statistics'
@@ -52,7 +52,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<ProtectedLayout />}>
-            <Route path='/' element={<></>} />
+            <Route path='/' element={<Dashboard />} />
             {/* <Route path='/statistics' element={<Statistics />} />
             <Route path='/statistics/crops' element={<Crops />} />
             <Route path='/statistics/crops/farmer' element={<Farmer />} />
