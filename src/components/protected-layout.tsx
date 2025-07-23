@@ -2,14 +2,14 @@ import { Navigate, Outlet } from 'react-router-dom'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/sidebar'
 import { AppSidebar } from './app-sidebar'
 import { Separator } from '@radix-ui/react-separator'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from './ui/breadcrumb'
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   BreadcrumbLink,
+//   BreadcrumbList,
+//   BreadcrumbPage,
+//   BreadcrumbSeparator,
+// } from './ui/breadcrumb'
 import { useAuth } from '@/store/useAuth'
 import { ModeToggle } from './mode-toggle'
 
