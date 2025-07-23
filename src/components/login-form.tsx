@@ -18,7 +18,7 @@ export function LoginForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const credentials = {
       email,
       password,
@@ -38,27 +38,36 @@ export function LoginForm({
       onSubmit={handleSubmit}
     >
       <div className='flex flex-col items-center gap-2 text-center'>
-        <h1 className='text-2xl font-bold'>Hisobingizga kiring</h1>
+        <h1 className='text-2xl font-bold'>
+          "Chorvoq" turistik-rekreatsion zonasi geoportali
+        </h1>
         <p className='text-muted-foreground text-sm text-balance'>
-          Hisobga kirish uchun elektron pochta manzilingiz va parolingizni kiriting.
+          Hisobingizga kiring
         </p>
       </div>
       <div className='grid gap-6'>
         <div className='grid gap-3'>
           <Label htmlFor='email'>Email</Label>
-          <Input id='email' type='email' placeholder='hisob@domen.com' required value={email} onChange={e => setEmail(e.target.value)} />
+          <Input
+            id='email'
+            type='email'
+            placeholder='hisob@domen.com'
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className='grid gap-3'>
           <div className='flex items-center'>
             <Label htmlFor='password'>Parol</Label>
-            <a
-              href='#'
-              className='ml-auto text-sm underline-offset-4 hover:underline'
-            >
-              Parolni unutdingizmi?
-            </a>
           </div>
-          <Input id='password' type='password' required value={password} onChange={e => setPassword(e.target.value)} />
+          <Input
+            id='password'
+            type='password'
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <Button type='submit' className='w-full'>
           Kirish

@@ -108,7 +108,7 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>
               <LogOut />
-              Log out
+              Tizimdan chiqish
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

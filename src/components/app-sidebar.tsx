@@ -34,12 +34,12 @@ const data = {
   },
   teams: [
     {
-      name: 'Acme Inc',
+      name: 'Chorvoq Inc',
       logo: GalleryVerticalEnd,
       plan: 'Enterprise',
     },
     {
-      name: 'Acme Corp.',
+      name: 'Chorvoq Corp.',
       logo: AudioWaveform,
       plan: 'Startup',
     },
