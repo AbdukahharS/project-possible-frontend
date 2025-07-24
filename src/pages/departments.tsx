@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/table'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Pencil, PlusCircle, Trash } from 'lucide-react'
+import { MoreHorizontal, Pencil, PlusCircle, Trash } from 'lucide-react'
 import {
   Dialog,
   DialogClose,
@@ -37,13 +37,17 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader } from '@/components/ui/loader'
-import { Checkbox } from '@/components/ui/checkbox'
-import { cn } from '@/lib/utils'
 
 type Department = {
   id: number
@@ -57,52 +61,63 @@ function Departments() {
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [openAdd, setOpenAdd] = useState(false)
   const [openUpdate, setOpenUpdate] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
+  const [deleteId, setDeleteId] = useState<number | null>(null)
+
   const columns: ColumnDef<Department>[] = [
     {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Select all'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Select row'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: 'id',
-      header: 'ID',
+      header: 'Tartib raqami',
+      cell: ({ row }) => <span>{row.index + 1}</span>,
     },
     {
       accessorKey: 'name',
       header: "Bo'lim nomi",
     },
     {
+      header: 'Xodimlar soni',
+      cell: () => {
+        const randomCount = Math.floor(Math.random() * 100)
+        return <span>{randomCount}</span>
+      },
+    },
+    {
       id: 'actions',
-      cell: ({ row }) => (
-        <Button
-          size='icon'
-          variant='ghost'
-          onClick={() => {
-            setOpenUpdate(true)
-            setSelectedId(row.original.id)
-            setName(row.original.name)
-          }}
-        >
-          <Pencil />
-        </Button>
-      ),
+      enableHiding: false,
+      cell: ({ row }) => {
+        const payment = row.original
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='block ml-auto'>
+                <span className='sr-only'>Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedId(payment.id)
+                  setName(payment.name)
+                  setOpenUpdate(true)
+                }}
+              >
+                <Pencil className='mr-1' />
+                Bo'lim nomini o'zgartirish
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant='destructive'
+                onClick={() => {
+                  setDeleteId(payment.id)
+                  setOpenDelete(true)
+                }}
+              >
+                <Trash className='mr-1' /> Bo'limni o'chirish
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )
+      },
     },
   ]
 
@@ -154,22 +169,22 @@ function Departments() {
     }
   }
 
-  const deleteSelectedRows = async () => {
-    const selectedRows = table.getSelectedRowModel().rows
-    if (selectedRows.length === 0) return
+  const handleDelete = async () => {
+    if (deleteId === null) return
     setIsLoading(true)
     try {
-      const idsToDelete = selectedRows.map((row) => row.original.id)
-      await Promise.all(
-        idsToDelete.map(async (id) => {
-          await api.delete(`/user/departments/${id}/`)
-        })
-      )
-      setData((prev) => prev.filter((dept) => !idsToDelete.includes(dept.id)))
-      toast.success("Tanlangan bo'limlar o'chirildi")
+      const res = await api.delete(`/user/departments/${deleteId}/`)
+      if (res.status === 204) {
+        setData((prev) => prev.filter((dept) => dept.id !== deleteId))
+        setDeleteId(null)
+        setOpenDelete(false)
+        toast.success("Bo'lim muvaffaqiyatli o'chirildi")
+      } else {
+        toast.error("Bo'limni o'chirishda xatolik yuz berdi")
+      }
     } catch (error) {
-      toast.error("Bo'limlarni o'chirishda xatolik yuz berdi")
-      console.error('Error deleting departments:', error)
+      toast.error("Bo'limni o'chirishda xatolik yuz berdi")
+      console.error('Error deleting department:', error)
     } finally {
       setIsLoading(false)
     }
@@ -206,44 +221,7 @@ function Departments() {
 
   return (
     <div className='p-4'>
-      <div className='mb-4 flex justify-between items-center'>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant='destructive'
-              className={cn(
-                'transition-all duration-300',
-                table.getSelectedRowModel().rows.length === 0 &&
-                  '!opacity-0 pointer-events-none'
-              )}
-              disabled={
-                table.getSelectedRowModel().rows.length === 0 || isLoading
-              }
-            >
-              <Trash />
-              Tanlanganlarni o'chirish
-              <Loader size='sm' className='ml-2' hidden={!isLoading} />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Siz mutlaqo ishonchingiz komilmi?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                Bu amalni ortga qaytarib bo‘lmaydi. Bu bo'limnni butunlay
-                o'chirib tashlaydi va ma'lumotlaringizni serverlarimizdan olib
-                tashlaydi.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
-              <AlertDialogAction onClick={deleteSelectedRows}>
-                O'chirishni tasdiqlash
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+      <div className='mb-4 flex justify-end items-center'>
         <Dialog open={openAdd} onOpenChange={setOpenAdd}>
           <form>
             <DialogTrigger asChild>
@@ -388,6 +366,25 @@ function Departments() {
           </DialogContent>
         </form>
       </Dialog>
+      <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Siz mutlaqo ishonchingiz komilmi?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Bu amalni ortga qaytarib bo‘lmaydi. Bu bo'limnni butunlay o'chirib
+              tashlaydi va ma'lumotlaringizni serverlarimizdan olib tashlaydi.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} asChild>
+              <Button variant='destructive'>O'chirishni tasdiqlash</Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
