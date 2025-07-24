@@ -48,6 +48,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader } from '@/components/ui/loader'
+import { cn } from '@/lib/utils'
 
 type Department = {
   id: number
@@ -273,9 +274,9 @@ function Departments() {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, i) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className={cn(i !== 0 && 'border-l', 'px-4')}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -299,13 +300,14 @@ function Departments() {
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, i) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                    className={cn(i % 2 === 0 ? 'bg-secondary' : 'bg-background')}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                  {row.getVisibleCells().map((cell, i) => (
+                    <TableCell key={cell.id} className={cn(i !== 0 && 'border-l', 'px-4')}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
