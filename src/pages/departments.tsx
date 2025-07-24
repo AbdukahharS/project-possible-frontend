@@ -5,6 +5,8 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type SortingState,
+  getSortedRowModel,
 } from '@tanstack/react-table'
 
 import {
@@ -17,7 +19,13 @@ import {
 } from '@/components/ui/table'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { MoreHorizontal, Pencil, PlusCircle, Trash } from 'lucide-react'
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  Pencil,
+  PlusCircle,
+  Trash,
+} from 'lucide-react'
 import {
   Dialog,
   DialogClose,
@@ -53,6 +61,7 @@ import { cn } from '@/lib/utils'
 type Department = {
   id: number
   name: string
+  user_count: number
 }
 
 function Departments() {
@@ -64,6 +73,7 @@ function Departments() {
   const [openUpdate, setOpenUpdate] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [deleteId, setDeleteId] = useState<number | null>(null)
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const columns: ColumnDef<Department>[] = [
     {
@@ -72,13 +82,30 @@ function Departments() {
     },
     {
       accessorKey: 'name',
-      header: "Bo'lim nomi",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Bo'lim nomi
+            <ArrowUpDown />
+          </Button>
+        )
+      },
     },
     {
-      header: 'Xodimlar soni',
-      cell: () => {
-        const randomCount = Math.floor(Math.random() * 100)
-        return <span>{randomCount}</span>
+      accessorKey: 'user_count',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Xodimlar soni
+            <ArrowUpDown />
+          </Button>
+        )
       },
     },
     {
@@ -126,6 +153,11 @@ function Departments() {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
   })
 
   useEffect(() => {
@@ -276,7 +308,10 @@ function Departments() {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header, i) => {
                   return (
-                    <TableHead key={header.id} className={cn(i !== 0 && 'border-l', 'px-4')}>
+                    <TableHead
+                      key={header.id}
+                      className={cn(i !== 0 && 'border-l', 'px-4')}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -304,10 +339,13 @@ function Departments() {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                    className={cn(i % 2 === 0 ? 'bg-secondary' : 'bg-background')}
+                  className={cn(i % 2 === 0 ? 'bg-secondary' : 'bg-background')}
                 >
                   {row.getVisibleCells().map((cell, i) => (
-                    <TableCell key={cell.id} className={cn(i !== 0 && 'border-l', 'px-4')}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn(i !== 0 && 'border-l', 'px-4')}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
