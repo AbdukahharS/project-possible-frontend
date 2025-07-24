@@ -48,7 +48,7 @@ const data = {
       items: [
         {
           title: "Bo'limlar",
-          url: '#',
+          url: '/departments',
         },
         {
           title: 'Rollar',

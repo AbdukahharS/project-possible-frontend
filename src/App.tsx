@@ -8,6 +8,7 @@ import ProtectedLayout from '@/components/protected-layout'
 import Dashboard from './pages/dashboard'
 import Login from './pages/login'
 import { ThemeProvider } from './components/theme-provider'
+import Departments from './pages/departments'
 // import Statistics from './pages/Statistics/Statistics'
 // import Crops from './pages/Statistics/Crops'
 // import Farmer from './pages/Statistics/Farmer'
@@ -53,6 +54,7 @@ function App() {
         <Routes>
           <Route element={<ProtectedLayout />}>
             <Route path='/' element={<Dashboard />} />
+            <Route path='/departments' element={<Departments />} />
             {/* <Route path='/statistics' element={<Statistics />} />
             <Route path='/statistics/crops' element={<Crops />} />
             <Route path='/statistics/crops/farmer' element={<Farmer />} />

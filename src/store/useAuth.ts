@@ -39,7 +39,7 @@ interface AuthState {
 
 export const useAuth = create<AuthState>()(
   persist(
-    (set) => ({
+    ((set, get) => ({
       isAuthenticated: false,
       access_token: null,
       refresh_token: null,
@@ -71,11 +71,11 @@ export const useAuth = create<AuthState>()(
 
       refreshToken: async () => {
         try {
-          const { refresh_token } = useAuth.getState()
+          const { refresh_token } = get()
 
           if (!refresh_token) return false
 
-          const res = await api.post<AuthTokens>('/token/refresh/', {
+          const res = await api.post<AuthTokens>('/user/token/refresh/', {
             refresh: refresh_token,
           })
 
@@ -86,12 +86,12 @@ export const useAuth = create<AuthState>()(
             })
             return true
           } else {
-            useAuth.getState().logout()
+            get().logout()
             return false
           }
         } catch (error) {
           console.error('Token refresh failed:', error)
-          useAuth.getState().logout()
+          get().logout()
           return false
         }
       },
@@ -104,7 +104,7 @@ export const useAuth = create<AuthState>()(
           user: null,
         })
       },
-    }),
+    })) as import('zustand').StateCreator<AuthState, [], [], AuthState>,
     {
       name: 'auth-storage',
       partialize: (state) => ({
